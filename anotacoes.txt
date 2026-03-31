@@ -1,0 +1,13 @@
+Endpoints
+Publicos
+todos os metetodos gets existentes dentro do codigo
+
+Privados
+post
+delete
+put
+patch
+
+database: firebase firestore da Google (NO-SQL nao relacional)
+
+host: vercel 
