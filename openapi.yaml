@@ -1,0 +1,188 @@
+openapi: 3.0.3
+info:
+  title: API de Charadas
+  description: API de charadas usando Flask, Firebase e autenticação JWT
+  version: "1.0.0"
+  contact:
+    name: Beatriz
+
+servers:
+  - url: http://localhost:5000
+
+paths:
+
+  /:
+    get:
+      summary: Informações da API
+      responses:
+        "200":
+          description: Informações básicas da API
+
+  /login:
+    post:
+      summary: Login do administrador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - usuario
+                - senha
+              properties:
+                usuario:
+                  type: string
+                  example: admin
+                senha:
+                  type: string
+                  example: 123456
+      responses:
+        "200":
+          description: Login realizado com sucesso
+        "400":
+          description: Dados inválidos
+        "401":
+          description: Usuário ou senha inválidos
+
+  /charadas:
+    get:
+      summary: Lista todas as charadas
+      responses:
+        "200":
+          description: Lista de charadas
+
+    post:
+      summary: Cria uma nova charada
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - pergunta
+                - resposta
+              properties:
+                pergunta:
+                  type: string
+                  example: O que é o que é, cai em pé e corre deitado?
+                resposta:
+                  type: string
+                  example: A chuva
+      responses:
+        "201":
+          description: Charada criada com sucesso
+        "400":
+          description: Dados inválidos
+        "401":
+          description: Não autorizado
+
+  /charadas/aleatoria:
+    get:
+      summary: Retorna uma charada aleatória
+      responses:
+        "200":
+          description: Charada aleatória
+        "404":
+          description: Nenhuma charada encontrada
+
+  /charadas/{id}:
+    get:
+      summary: Busca charada por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Charada encontrada
+        "404":
+          description: Charada não encontrada
+
+    put:
+      summary: Atualiza totalmente uma charada
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - pergunta
+                - resposta
+              properties:
+                pergunta:
+                  type: string
+                resposta:
+                  type: string
+      responses:
+        "200":
+          description: Charada atualizada com sucesso
+        "400":
+          description: Dados inválidos
+        "404":
+          description: Charada não encontrada
+
+    patch:
+      summary: Atualiza parcialmente uma charada
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pergunta:
+                  type: string
+                resposta:
+                  type: string
+      responses:
+        "200":
+          description: Charada atualizada com sucesso
+        "400":
+          description: Nenhum campo enviado
+        "404":
+          description: Charada não encontrada
+
+    delete:
+      summary: Remove uma charada
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Charada excluída com sucesso
+        "404":
+          description: Charada não encontrada
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

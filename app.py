@@ -7,6 +7,7 @@ from flask_cors import CORS
 import os 
 from dotenv import load_dotenv 
 import json 
+from flasgger import Swagger
 
 load_dotenv() # Carrega as variáveis de ambiente do arquivo .env para o ambiente de execução do phyton. 
 
@@ -24,6 +25,14 @@ db = firestore.client()
 
 # 2. Configuração do Flask
 app = Flask(__name__)
+# versão openapi 
+app.config['SWAGGER']={
+    'openapi': '3.0.3'
+
+}
+#chamar o openapi para o código 
+swagger=Swagger(app, template_file='openapi.yaml') #template_file é o arquivo onde está a documentação da api, ou seja, o openapi.yaml
+
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 CORS(app, origins="*")
 
