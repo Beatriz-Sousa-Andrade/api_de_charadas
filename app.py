@@ -95,14 +95,17 @@ def get_charadas():
 @app.route("/charadas/aleatoria", methods=['GET'])
 def get_charadas_random():
     charadas = []
+    # Busca todos os documentos da coleção
     lista = db.collection('charadas').stream()
     
     for charada in lista:
         charadas.append(charada.to_dict())
 
+    # Se a lista estiver vazia, o erro 404 é enviado
     if not charadas:
-        return jsonify({'error': 'Nenhuma charada encontrada no banco.'}), 404
+        return jsonify({'error': 'O banco de dados está vazio!'}), 404
 
+    # Escolhe uma aleatória
     return jsonify(random.choice(charadas)), 200
 
 # Rota 3 retorna charada pelo id 
