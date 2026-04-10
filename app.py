@@ -106,7 +106,7 @@ def get_charadas_random():
     return jsonify(random.choice(charadas)), 200
 
 # Rota 3 retorna charada pelo id 
-@app.route("/charadas/<id>", methods=['GET'])
+@app.route("/charadas/<int:id>", methods=['GET'])
 def get_charada_by_id(id):  
     lista=db.collection('charadas').where('id', '==', id).stream()
     
@@ -142,7 +142,7 @@ def create_charada():
 
     #cadastrar nova charada 
         db.collection('charadas').add({
-            'id': str(novo_id),
+            'id': (novo_id),
             'pergunta': dados['pergunta'],
             'resposta': dados['resposta']      
         })
@@ -161,7 +161,7 @@ def charadas_put(id):
     
     try:
         # Busca o documento com o ID correspondente
-        docs = db.collection('charadas').where('id', '==', str(id)).limit(1).get()
+        docs = db.collection('charadas').where('id', '==', id).limit(1).get()
         
         # Correção: Verificar se a lista de documentos está vazia
         if len(docs) == 0:
@@ -190,7 +190,7 @@ def charadas_patch(id):
     
     try:
         # Busca o documento com o ID correspondente
-        docs = db.collection('charadas').where('id', '==', str(id)).limit(1).get()
+        docs = db.collection('charadas').where('id', '==', id).limit(1).get()
         
         if len(docs) == 0: #o len verifica se a lista de documentos está vazia, ou seja, se a charada existe ou não
             return jsonify({'error': 'Charada não encontrada.'}), 404
@@ -219,7 +219,7 @@ def charadas_delete(id):
     
     try:
         # Busca o documento com o ID correspondente
-        docs = db.collection('charadas').where('id', '==', str(id)).limit(1).get()
+        docs = db.collection('charadas').where('id', '==', id).limit(1).get()
       #len verifica se a lista de documentos está vazia, ou seja, se a charada existe ou não  
         if len(docs) == 0:
             return jsonify({'error': 'Charada não encontrada.'}), 404
